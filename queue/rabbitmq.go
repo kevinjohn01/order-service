@@ -21,7 +21,7 @@ func InitRabbitMQ() {
         log.Fatal("Failed to open a channel:", err)
     }
 
-    _, err = Ch.QueueDeclare("order.created", true, false, false, false, nil)
+    _, err = Ch.QueueDeclare("order_events",  true, false, false, false, nil)
     if err != nil {
         log.Fatal("Failed to declare queue:", err)
     }
@@ -30,7 +30,7 @@ func InitRabbitMQ() {
 func PublishOrder(order interface{}) {
     body, _ := json.Marshal(order)
     err := Ch.Publish(
-        "", "order.created", false, false,
+        "order_events", "order.created", false, false,
         amqp.Publishing{
             ContentType: "application/json",
             Body:        body,

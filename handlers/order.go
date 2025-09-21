@@ -56,7 +56,13 @@ func (h *OrderHandler) CreateOrder(c *gin.Context) {
         return
     }
 
-    go queue.PublishOrder(order) // async publish
+    go queue.PublishOrder(struct {
+        ProductID int `json:"productId"`
+        Qty       int `json:"qty"`
+    }{
+        ProductID: req.ProductID,
+        Qty:       1,
+    })
 
     c.JSON(http.StatusCreated, order)
 }
